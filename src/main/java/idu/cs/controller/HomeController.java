@@ -18,23 +18,27 @@ import idu.cs.repository.UserRepository;
 public class HomeController {
 	@Autowired UserRepository userRepo; // Dependency Injection
 
-	@GetMapping("/")
+	/*@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("test", "인덕컴소");
 		model.addAttribute("pjy", "박준용");
 		return "index";
-	}
+	}*/
 	@GetMapping("/users")
 	public String getAllUser(Model model){
 		model.addAttribute("users", userRepo.findAll());
 		
 		return "userlist";
 	}
-	@GetMapping("/register")
+	@GetMapping("/regform")
 	public String regform(Model model) {		
 		return "regform";
 	}
-	@PostMapping("/create")
+	@GetMapping("/")
+	public String welcome(Model model) {		
+		return "welcome";
+	}
+	@PostMapping("/users")
 	public String createUser(@Valid @RequestBody User user, Model model) {
 		userRepo.save(user);
 		model.addAttribute("users", userRepo.findAll());
@@ -52,7 +56,7 @@ public class HomeController {
 		model.addAttribute("company", user.getCompany());
 		return "user";
 	}
-	
+	/*
 	@GetMapping("/welcome")
 	public String loadWelcome(Model model, 
 			Long userId) throws ResourceNotFoundException {
@@ -60,4 +64,5 @@ public class HomeController {
 		model.addAttribute("name", userName);
 		return "welcome";
 	}
+	*/
 }
