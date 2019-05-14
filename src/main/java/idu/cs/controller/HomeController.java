@@ -44,7 +44,6 @@ public class HomeController {
 	@GetMapping("/users/{id}")
 	public String getuserById(@PathVariable(value = "id") Long userId, 
 			Model model ) throws ResourceNotFoundException {
-		//User user = userRepo.findById(userId).get();
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> 
 				new ResourceNotFoundException("not found " + userId ));
