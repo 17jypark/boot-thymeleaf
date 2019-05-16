@@ -12,24 +12,45 @@
 <div class="container" style="min-height: 500px">
 	
     <div class="starter-template">
-     <h1>Spring Boot AJAX Example</h1>
+     <h1>Member View</h1>
         <table class="table">
 		  <thead class="thead-dark">
 		    <tr>
 		      <th scope="col">Id</th>
 		      <th scope="col">Name</th>
 		      <th scope="col">Company</th>
+		      <th scope="col">Edit</th>
+		      <th scope="col">Delete</th>
 		    </tr>
 		  </thead>
 		  <tbody>
 		    <tr>
-		      <th scope="row"><span th:text="${id}"></span></th>
-		      <td><span th:text="${name}"></span></td>
-		      <td><span th:text="${company}"></span></td>
+		      	<form class="form-horizontal" id="updform">
+		      	<th scope="row">
+		      		<span th:text="${id}"></span>
+		      		<input type="hidden" class="form-control" id="id" name="id" th:value="${id}"/>
+		      	</th>
+		      	<td><input type="text" class="form-control" id="name" name="name" th:value="${name}"/></td>
+		      	<td><input type="text" class="form-control" id="company" name="company" th:value="${company}"/></td>
+		      	<td>
+		      		<button type="submit" id="btn-update"
+                            class="btn btn-primary btn-sm">Update
+                    </button>
+                </td>
+		      	</form>
+		      	<td>
+		      	<form class="form-horizontal" id="delform">
+		      		<input type="hidden" class="form-control" id="id" name="id" th:value="${id}"/>
+		      		<button type="submit" id="btn-delete"
+                            class="btn btn-danger btn-sm">Delete
+                    </button>
+		      	</form>
+		      	</td>
 		    </tr>
 		  </tbody>
 		</table>
 
+		<br><br><a href="/users">List</a>
     </div>
 
 </div>
