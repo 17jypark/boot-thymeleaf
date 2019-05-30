@@ -2,6 +2,7 @@ package idu.cs.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import idu.cs.exception.ResourceNotFoundException;
 import idu.cs.repository.UserRepository;
 
 @Controller
+//애노테이션(Annotation) : 컴파일러에게 설정 내용이나 상태를 알려주는 목적, 적용버무이가 클래스 내부로 한정
 public class HomeController {
 	@Autowired UserRepository userRepo; // Dependency Injection
 
@@ -34,9 +36,35 @@ public class HomeController {
 	public String welcome(Model model) {		
 		return "index";
 	}
+	
 	@GetMapping("/login")
-	public String login(Model model) {		
+	public String loginForm() {		
 		return "login";
+	}
+	
+	@PostMapping("/login")
+	// 실제로 로그인 처리, user : 입력한 내용에 대한 객체
+	// sessionUser : 리파지터리로 부터 가져온 내용의 객체
+	public String loginUser(@Valid User user, HttpSession session) {
+		System.out.println("login process : ");
+		User sessionUser = userRepo.findByUserId(user.getUserId());
+		if(sessionUser == null) {
+			System.out.println("id error : ");
+			return "redirect:/login";
+		}
+		if(!sessionUser.getUserPw().equals(user.getUserPw())) {
+			System.out.println("pw error : ");
+			return "redirect:/login";
+		}
+		session.setAttribute("user", sessionUser);
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logoutUser(HttpSession session) {
+		//session.invalidate();
+		session.removeAttribute("user");
+		return "redirect:/";
 	}
 	
 	@GetMapping("/users")
@@ -44,6 +72,11 @@ public class HomeController {
 		model.addAttribute("users", userRepo.findAll());
 		
 		return "userlist";
+	}
+	
+	@GetMapping("/info")
+	public String info(Model model){		
+		return "info";
 	}
 	
 	@GetMapping("/users/byname") // byname?name=***, ***값이 name 변수
@@ -81,16 +114,16 @@ public class HomeController {
 		return "user";
 	}
 	
-	@GetMapping("/regform")
+	@GetMapping("/register")
 	public String regform(Model model) {		
-		return "regform";
+		return "register";
 	}
 
 	@PostMapping("/users")
 	public String createUser(@Valid User user, Model model) {
 		userRepo.save(user);
 		model.addAttribute("users", userRepo.findAll());
-		return "redirect:/users";
+		return "redirect:/";
 	}
 	@PutMapping("/users/{id}")
 	//@RequestMapping(value=""/users/{id}" method=RequestMethod.Update)

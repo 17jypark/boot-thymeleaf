@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<th:block th:include="fragments/header"></th:block>
+<title>User List</title>
+</head>
+<body>
+<th:block th:include="fragments/nav"></th:block>
+<div class="container" style="min-height: 500px">
+	
+    <div class="starter-template">
+     <h1>User List</h1>
+        <table class="table">
+		  <thead class="thead-dark">
+		    <tr>
+		      <th scope="col">Id</th>
+		      <th scope="col">Name</th>
+		      <th scope="col">Company</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		   <tr th:each="user : ${users}">
+		<td><a th:href="@{/users/{id}(id=${user.id})}"><span th:text="${user.id}"></span></a></td>
+		<td th:text="${user.name}">ID</td>
+		<td th:text="${user.company}">ID</td>
+	</tr>
+		  </tbody>
+		</table>
+
+    </div>
+
+</div>
+
+</body>
+<th:block th:include="fragments/footer"></th:block>
+</html>
