@@ -74,11 +74,6 @@ public class HomeController {
 		return "userlist";
 	}
 	
-	@GetMapping("/info")
-	public String info(Model model){		
-		return "info";
-	}
-	
 	@GetMapping("/users/byname") // byname?name=***, ***값이 name 변수
 	public String getUsersByName(@Param(value = "name") String name, Model model){
 		List<UserEntity> users = userRepo.findByName(name);
@@ -111,7 +106,7 @@ public class HomeController {
 				new ResourceNotFoundException("not found " + userId ));
 		model.addAttribute("user", user);
 		
-		return "user";
+		return "info";
 	}
 	
 	@GetMapping("/register")
