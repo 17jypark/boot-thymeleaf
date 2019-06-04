@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import idu.cs.domain.UserEntity;
+import idu.cs.domain.User;
+import idu.cs.entity.UserEntity;
 import idu.cs.exception.ResourceNotFoundException;
 import idu.cs.repository.UserRepository;
+import idu.cs.service.UserService;
 
 @Controller
 //애노테이션(Annotation) : 컴파일러에게 설정 내용이나 상태를 알려주는 목적, 적용버무이가 클래스 내부로 한정
-public class HomeController {
-	@Autowired UserRepository userRepo; // Dependency Injection
+public class UserController {
+	//@Autowired UserRepository userRepo; // Dependency Injection
+	@Autowired UserService userService;
 
 	/*@GetMapping("/")
 	public String home(Model model) {
@@ -45,9 +48,10 @@ public class HomeController {
 	@PostMapping("/login")
 	// 실제로 로그인 처리, user : 입력한 내용에 대한 객체
 	// sessionUser : 리파지터리로 부터 가져온 내용의 객체
-	public String loginUser(@Valid UserEntity user, HttpSession session) {
+	public String loginUser(@Valid User user, HttpSession session) {
 		System.out.println("login process : ");
-		UserEntity sessionUser = userRepo.findByUserId(user.getUserId());
+		User sessionUser = userService.getUserByUserId(user.getUserId()); 
+				//userRepo.findByUserId(user.getUserId());
 		if(sessionUser == null) {
 			System.out.println("id error : ");
 			return "redirect:/login";
@@ -69,11 +73,12 @@ public class HomeController {
 	
 	@GetMapping("/users")
 	public String getAllUser(Model model){
-		model.addAttribute("users", userRepo.findAll());
+		model.addAttribute("users", userService.getUsers());
+		//model.addAttribute("users", userRepo.findAll());
 		
 		return "userlist";
 	}
-	
+	/*
 	@GetMapping("/users/byname") // byname?name=***, ***값이 name 변수
 	public String getUsersByName(@Param(value = "name") String name, Model model){
 		List<UserEntity> users = userRepo.findByName(name);
@@ -97,13 +102,12 @@ public class HomeController {
 		
 		return "userlist";
 	}
-	
+	*/
 	@GetMapping("/users/{id}")
 	public String getUserById(@PathVariable(value = "id") Long userId, 
 			Model model ) throws ResourceNotFoundException {
-		UserEntity user = userRepo.findById(userId)
-				.orElseThrow(() -> 
-				new ResourceNotFoundException("not found " + userId ));
+		User user = userService.getUser(userId); 
+				//userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("not found " + userId ));
 		model.addAttribute("user", user);
 		
 		return "info";
@@ -113,13 +117,14 @@ public class HomeController {
 	public String regform(Model model) {		
 		return "register";
 	}
-
+	
 	@PostMapping("/users")
-	public String createUser(@Valid UserEntity user, Model model) {
-		userRepo.save(user);
-		model.addAttribute("users", userRepo.findAll());
-		return "redirect:/";
+	public String createUser(@Valid User user, Model model) {
+		userService.saveUser(user);//userRepo.save(user);
+		//model.addAttribute("users", userService.getUsers());//userRepo.findAll());
+		return "redirect:/users";
 	}
+	/*
 	@PutMapping("/users/{id}")
 	//@RequestMapping(value=""/users/{id}" method=RequestMethod.Update)
 	public String updateUserById(@PathVariable(value = "id") Long userId, 
@@ -136,6 +141,7 @@ public class HomeController {
 		return "redirect:/users"; //
 		//return ResponseEntity.ok(userUpdate);
 	}
+	
 	@DeleteMapping("/users/{id}")
 	//@RequestMapping(value=""/users/{id}" method=RequestMethod.DELETE)
 	public String deleteUserById(@PathVariable(value = "id") Long userId, 
@@ -147,7 +153,7 @@ public class HomeController {
 		model.addAttribute("name", user.getName());
 		return "disjoin";
 	}
-	
+	*/
 	/*
 	@GetMapping("/welcome")
 	public String loadWelcome(Model model, 
